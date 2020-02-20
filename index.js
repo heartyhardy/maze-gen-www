@@ -1,32 +1,41 @@
-import {Maze,Cell} from 'maze_gen_basics';
-import {memory} from 'maze_gen_basics/maze_gen_basics_bg';
+import { Maze, Cell } from "maze_gen_basics";
+import { memory } from "maze_gen_basics/maze_gen_basics_bg";
+
+const CELL_SIZE = 50;
+const GRID_COLOR = "BLACK";
+
+const edges = [];
+const ignored = [];
 
 let maze = Maze.new();
 let width = maze.width();
 let height = maze.height();
 
-maze.gen_maze();
 
-let pretext = document.getElementById("fmt-display");
-let visited_count = document.getElementById("visited-count");
-let next_visited = document.getElementById("next-visited");
-let has_next = document.getElementById("has-next");
+// let canvas = document.getElementById("maze-canvas");
+// canvas.width = (CELL_SIZE + 1) * width + 1;
+// canvas.height = (CELL_SIZE + 1) * height + 1;
 
-const renderLoop =() =>{
-    maze.gen_maze();
-    pretext.textContent = maze.render();
-    visited_count.textContent="visited count: " + maze.get_visited_count();
-    // next_visited.textContent="next visited: "+maze.get_next_visited();
-    // has_next.textContent="has next: "+maze.has_next();
-    
-    setTimeout(()=>{
-        requestAnimationFrame(renderLoop);
-    },1000);
-}
+// const ctx = canvas.getContext("2d");
+
+let pretext = document.getElementById("pre-render");
+let visited = document.getElementById("visited");
+// Render Loop
+const renderLoop = () => {
+  pretext.textContent = maze.render();
+  visited.textContent = maze.get_visited();
+  maze.gen_maze();
+
+  setTimeout(() => {
+    requestAnimationFrame(renderLoop);
+  }, 50);
+};
+
+
+// Get index
+const get_index = (row, column) => {
+  return row * width + column;
+};
+
 
 renderLoop();
-
-
-// let cellsPtr = maze.cells();
-// let cells = new Uint8Array(memory.buffer, cellsPtr, width*height);
-// console.log(cells);
